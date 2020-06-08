@@ -1,5 +1,6 @@
 import random
 import json
+import sys
 
 
 def get_dice_num(dice):
@@ -8,20 +9,6 @@ def get_dice_num(dice):
     for x in range(dice):
         dice_num += str(random.randint(1, 6))
     return dice_num
-
-
-def get_word(data, id):
-    # Match dice number with word from the JSON list
-    for i in data:
-        if i['id'] == id:
-            return i['word']
-
-
-# Initialize 2 of each noun and adjectives
-noun_1 = get_dice_num(5)
-noun_2 = get_dice_num(5)
-adj_1 = get_dice_num(4)
-ajd_2 = get_dice_num(4)
 
 # Open adjectives list
 with open('./nlp-adjectives.json') as f1:
@@ -33,8 +20,17 @@ with open('./nlp-nouns.json') as f2:
     noun_list = json.load(f2)
 f2.close()
 
+# Initialize 2 of each noun and adjectives
+num = 2
+if len(sys.argv) > 1:
+    num = int(sys.argv[1])
+arr = []
+for x in range(num):
+    arr.append(adj_list[get_dice_num(4)])
+    arr.append(noun_list[get_dice_num(5)])
+
 # Concatenate the words into a password
-password = f"{get_word(adj_list, adj_1)} {get_word(noun_list, noun_1)} {get_word(adj_list, ajd_2)} {get_word(noun_list, noun_2)}"
+password = " ".join(arr)
 
 # Print the password
 print(password)
